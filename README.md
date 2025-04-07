@@ -1,6 +1,6 @@
-# Node.js Backend for Course Management System
+# Escola Cursos Backend
 
-Este projeto é um backend desenvolvido com Node.js, Express e PostgreSQL. Ele fornece funcionalidades para gerenciar alunos, cursos, aulas, rastrear progresso e gerar certificados em formato PDF.
+Este projeto é um backend desenvolvido com **Node.js**, **Express** e **PostgreSQL**. Ele fornece funcionalidades para gerenciar alunos, cursos, aulas, rastrear progresso e gerar certificados em formato PDF.
 
 ## Funcionalidades
 
@@ -14,31 +14,29 @@ Este projeto é um backend desenvolvido com Node.js, Express e PostgreSQL. Ele f
 - **Node.js**
 - **Express**
 - **PostgreSQL**
+- **Sequelize** para ORM
 - **JWT** para autenticação
 - **PDFKit** para geração de PDFs
-- **Knex.js** para migrações e consultas ao banco de dados
 
 ## Estrutura do Projeto
 
 ```
 escola-cursos-backend
 ├── src
-│   ├── controllers          # Contém a lógica dos controladores para lidar com requisições
-│   ├── middlewares          # Contém middlewares, como autenticação
-│   ├── models               # Contém os modelos para interação com o banco de dados
-│   ├── routes               # Contém as definições de rotas
-│   ├── services             # Contém serviços para lógica de negócios
-│   ├── db                   # Configuração do banco de dados e migrações
-│   ├── utils                # Funções utilitárias
-│   ├── app.js               # Inicializa a aplicação Express
-│   └── server.js            # Inicia o servidor
-├── .env                     # Variáveis de ambiente
+│   ├── config               # Configuração do banco de dados (não versionado)
+│   ├── controllers          # Controladores para lidar com as requisições
+│   ├── middlewares          # Middlewares, como autenticação
+│   ├── models               # Modelos do Sequelize
+│   ├── routes               # Rotas da aplicação
+│   ├── app.js               # Configuração do Express
+│   └── server.js            # Inicialização do servidor
+├── .env                     # Variáveis de ambiente (não versionado)
 ├── .gitignore               # Arquivo de exclusão do Git
 ├── package.json             # Metadados e dependências do projeto
 └── README.md                # Documentação do projeto
 ```
 
-## Instruções de Configuração
+## Configuração do Projeto
 
 1. **Clone o repositório:**
 
@@ -55,10 +53,13 @@ escola-cursos-backend
 
 3. **Configure as variáveis de ambiente:**
 
-   Crie um arquivo `.env` na raiz do projeto e adicione as seguintes variáveis:
+   Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 
    ```properties
-   DATABASE_URL=postgres://seu_usuario:sua_senha@localhost:5432/nome_do_banco
+   DB_USER=postgres
+   DB_PASSWORD=developer
+   DB_NAME=escola_cursos
+   DB_HOST=localhost
    JWT_SECRET=your_jwt_secret
    PORT=3000
    ```
@@ -69,21 +70,21 @@ escola-cursos-backend
 
    ```bash
    sudo -u postgres psql
-   CREATE DATABASE nome_do_banco;
+   CREATE DATABASE escola_cursos;
    ```
 
 5. **Execute as migrações:**
 
-   Use o Knex para criar as tabelas no banco de dados:
+   Use o Sequelize CLI para criar as tabelas no banco de dados:
 
    ```bash
-   npx knex migrate:latest
+   npx sequelize-cli db:migrate
    ```
 
 6. **Inicie o servidor:**
 
    ```bash
-   npm start
+   npm run dev
    ```
 
    O servidor estará rodando em `http://localhost:3000`.

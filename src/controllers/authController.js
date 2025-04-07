@@ -1,38 +1,21 @@
-const jwt = require('jsonwebtoken');
+// filepath: /src/controllers/authController.js
+const { User } = require('../models');
 const bcrypt = require('bcrypt');
-const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
 
-// Função para registrar um novo usuário
 exports.register = async (req, res) => {
-    const { username, password } = req.body;
-
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({ username, password: hashedPassword });
-        res.status(201).json({ message: 'Usuário registrado com sucesso', userId: newUser.id });
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao registrar usuário', error });
-    }
+  const { name, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = await User.create({ name, email, password: hashedPassword });
+  res.json(user);
 };
 
-// Função para fazer login do usuário
 exports.login = async (req, res) => {
-    const { username, password } = req.body;
-
-    try {
-        const user = await User.findByUsername(username);
-        if (!user) {
-            return res.status(401).json({ message: 'Usuário não encontrado' });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Senha incorreta' });
-        }
-
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ message: 'Login bem-sucedido', token });
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao fazer login', error });
-    }
+  const { email, password } = req.body;
+  const user = await User.findOne({ where: { email } });
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+  res.json({ token });
 };

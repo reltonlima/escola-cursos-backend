@@ -1,18 +1,9 @@
+// filepath: /src/routes/authRoutes.js
 const express = require('express');
-const authController = require('../controllers/authController');
-const authMiddleware = require('../middlewares/authMiddleware');
-
 const router = express.Router();
+const { register, login } = require('../controllers/authController');
 
-// Route for user registration
-router.post('/register', authController.register);
-
-// Route for user login
-router.post('/login', authController.login);
-
-// Middleware to protect routes
-router.use(authMiddleware.verifyToken);
-
-// Additional routes can be added here for authenticated users
+router.post('/register', register);
+router.post('/login', login);
 
 module.exports = router;
