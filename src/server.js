@@ -1,4 +1,6 @@
 // filepath: /src/server.js
+require('dotenv').config(); // Certifique-se de que esta linha está no início do arquivo
+
 const app = require('./app');
 const { sequelize } = require('./models');
 
